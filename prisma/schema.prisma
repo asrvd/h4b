@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                       String             @id @default(cuid())
+  username                 String             @unique
+  email                    String             @unique
+  phone                    String             @unique
+  firstName                String
+  lastName                 String
+  password_hash            String
+  sessions                 Session[]
+  addressId                String             @unique
+  address                  UserAddress        @relation(fields: [addressId], references: [id])
+  latitude                 Float
+  longitude                Float
+  points                   Int                @default(0)
+  GovernmentReports        GovernmentReport[]
+  civicReports             CivicReport[]
+  upvotedCivicReports      CivicReport[]      @relation("UpvotedCivicReports")
+  downvotedCivicReports    CivicReport[]      @relation("DownvotedCivicReports")
+  upvotedGovernmentReports GovernmentReport[] @relation("UpvotedGovernmentReports")
+}
+
+model UserAddress {
+  id        String   @id @default(cuid())
+  street    String
+  city      String
+  state     String
+  zip       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User?
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+
+  user User @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
+model CivicReport {
+  id          String   @id @default(cuid())
+  userId      String
+  message     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+  isSpam      Boolean  @default(false)
+  title       String
+  latitude    Float
+  longitude   Float
+  upvotes     Int      @default(0)
+  downvotes   Int      @default(0)
+  upvotedBy   User[]   @relation("UpvotedCivicReports")
+  downvotedBy User[]   @relation("DownvotedCivicReports")
+}
+
+// to issues alerts/reports about governement officals or agencies
+// regarding corruption, abuse of power, etc.
+
+enum GovernmentReportCategory {
+  CORRUPTION
+  ABUSE_OF_POWER
+  INCOMPETENCE
+  OTHER
+}
+
+model GovernmentReport {
+  id             String                   @id @default(cuid())
+  anonymous      Boolean                  @default(true)
+  title          String
+  userId         String
+  category       GovernmentReportCategory
+  message        String
+  officialName   String?
+  officeName     String
+  officeLocation String
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+  user           User                     @relation(fields: [userId], references: [id])
+  upvotes        Int                      @default(0)
+  upvotedBy      User[]                   @relation("UpvotedGovernmentReports")
+}
