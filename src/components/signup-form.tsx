@@ -43,7 +43,13 @@ const signUpFormSchema = z.object({
 export type SignupFormValues = z.infer<typeof signUpFormSchema>;
 
 export function SignUpForm() {
-  const userLocation = useGeoLocation();
+  const { latitude, longitude, requestLocation, error } = useGeoLocation();
+
+  useEffect(() => {
+    if (!latitude && !longitude && !error) {
+      requestLocation();
+    }
+  }, [latitude, longitude, requestLocation, error]);
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signUpFormSchema),
     defaultValues: {
@@ -59,8 +65,8 @@ export function SignUpForm() {
         state: "",
         zip: "",
       },
-      latitude: userLocation?.coords.latitude ?? 0,
-      longitude: userLocation?.coords.longitude ?? 0,
+      latitude: latitude!,
+      longitude: longitude!,
     },
   });
 
