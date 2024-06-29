@@ -21,7 +21,12 @@ export default async function Page() {
   return (
     <main className="p-4 w-full h-full flex flex-col justify-center items-center gap-4">
       <div className="lg:w-1/2 w-full p-4">
-        <h1 className="font-bold text-xl mb-2">Sign up</h1>
+        <h2 className="text-3xl font-bold text-center text-foreground">
+          Sign up/Register
+        </h2>
+        <p className="text-sm text-center text-muted-foreground">
+          Please make sure you give us location access for registration.
+        </p>
         <SignUpForm />
         <p className="text-sm mt-4">
           Already have an account?{" "}

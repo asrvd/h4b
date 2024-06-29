@@ -143,6 +143,42 @@ export async function getReport(reportId: string) {
   }
 }
 
+export async function deleteReport(
+  reportId: string,
+  reportType: "civic" | "government"
+) {
+  if (!reportId) {
+    return {
+      error: "Invalid report ID",
+    };
+  }
+
+  try {
+    if (reportType === "civic") {
+      const report = await db.civicReport.delete({
+        where: {
+          id: reportId,
+        },
+      });
+
+      return revalidatePath("/dashboard");
+      
+    } else {
+      const report = await db.governmentReport.delete({
+        where: {
+          id: reportId,
+        },
+      });
+
+      return revalidatePath("/dashboard");
+    }
+  } catch (error) {
+    return {
+      error: "An unknown error occurred",
+    };
+  }
+}
+
 export async function markAlertAsSpam(alertId: string) {
   if (!alertId) {
     return {

@@ -15,9 +15,11 @@ export default async function Page() {
     return redirect("/");
   }
   return (
-    <main className="p-4 w-full h-full flex flex-col justify-center items-center gap-4">
-      <div className="lg:w-1/2 w-full p-4">
-        <h1>Sign in</h1>
+    <main className="p-4 w-full min-h-screen flex flex-col justify-center items-center gap-4">
+      <div className="lg:w-[40%] w-full p-4">
+        <h2 className="text-3xl font-bold text-center text-foreground">
+          Sign in
+        </h2>
         <LoginForm />
         <p className="text-sm mt-4">
           Don&apos;t have an account?{" "}

@@ -2,7 +2,7 @@
 import { redirect } from "next/navigation";
 import { LegacyScrypt } from "lucia";
 import { db } from "@/lib/db";
-import { lucia } from "@/lib/auth";
+import { lucia, validateRequest } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import { SignupFormValues } from "@/components/signup-form";
@@ -71,6 +71,26 @@ export async function signup(values: SignupFormValues) {
     };
   }
   return redirect("/feed");
+}
+
+export async function logout() {
+  "use server";
+  const { session } = await validateRequest();
+
+  if (!session) {
+    return {
+      error: "Unauthorised",
+    };
+  }
+
+  await lucia.invalidateSession(session.id);
+  const sessionCookie = await lucia.createBlankSessionCookie();
+  cookies().set(
+    sessionCookie.name,
+    sessionCookie.value,
+    sessionCookie.attributes
+  );
+  return redirect("/login");
 }
 
 export async function login(values: LoginFormValues) {

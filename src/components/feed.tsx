@@ -104,13 +104,6 @@ export default function Feed({
 
   return (
     <div className="flex flex-col items-center justify-start w-full min-h-screen">
-      {enlargedReport && (
-        <ReportEnalrgedDialog
-          report={enlargedReport}
-          onClose={() => setEnlargedReport(null)}
-          reportType={tab}
-        />
-      )}
       <CreateGovernmentReportForm
         showDialog={showGovernmentReportForm}
         setShowDialog={setShowGovernmentReportForm}
@@ -122,7 +115,7 @@ export default function Feed({
         userId={userId}
       />
       <div className="flex flex-col justify-start w-full lg:w-2/3 min-h-full text-center gap-4">
-        <h1 className="text-3xl font-bold">Feed Page</h1>
+        <h1 className="text-3xl font-bold text-left">Report Feed</h1>
 
         <div className="flex gap-2 items-center w-full justify-center">
           <Button
@@ -334,6 +327,14 @@ export default function Feed({
               </div>
             ))}
           </div>
+        )}
+
+        {enlargedReport && (
+          <ReportEnalrgedDialog
+            report={enlargedReport}
+            onClose={() => setEnlargedReport(null)}
+            reportType={tab}
+          />
         )}
 
         <Create
