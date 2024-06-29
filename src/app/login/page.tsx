@@ -20,7 +20,7 @@ export default async function Page() {
         <h1>Sign in</h1>
         <LoginForm />
         <p className="text-sm mt-4">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/signup" className="text-blue-500">
             Sign up
           </Link>
