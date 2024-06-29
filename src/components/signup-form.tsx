@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
 import { signup } from "@/app/actions/auth";
+import { toast } from "sonner";
 
 const signUpFormSchema = z.object({
   username: z
@@ -43,6 +44,7 @@ const signUpFormSchema = z.object({
 export type SignupFormValues = z.infer<typeof signUpFormSchema>;
 
 export function SignUpForm() {
+  const [pending, setPending] = useState(false);
   const { latitude, longitude, requestLocation, error } = useGeoLocation();
 
   useEffect(() => {
@@ -65,18 +67,31 @@ export function SignUpForm() {
         state: "",
         zip: "",
       },
-      latitude: latitude!,
-      longitude: longitude!,
+      latitude: latitude || 0,
+      longitude: longitude || 0,
     },
   });
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof signUpFormSchema>) {
+    setPending(true);
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
 
+    if (!latitude || !longitude) {
+      requestLocation();
+      toast.error("Please allow location access to sign up.");
+      form.reset();
+      return;
+    }
+
+    values.latitude = latitude;
+    values.longitude = longitude;
+
     await signup(values);
+
+    setPending(false);
   }
 
   return (
@@ -219,7 +234,9 @@ export function SignUpForm() {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit">
+          {pending ? "Signing up..." : "Sign Up"}
+        </Button>
       </form>
     </Form>
   );

@@ -30,6 +30,7 @@ const loginFormSchema = z.object({
 export type LoginFormValues = z.infer<typeof loginFormSchema>;
 
 export function LoginForm() {
+  const [pending, setPending] = useState(false);
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -40,12 +41,15 @@ export function LoginForm() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof loginFormSchema>) {
+    setPending(true);
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
 
     // 3. Call the login action.
     await login(values);
+
+    setPending(false);
   }
 
   return (
@@ -77,7 +81,9 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit">
+          {pending ? "Signing in..." : "Sign in"}
+        </Button>
       </form>
     </Form>
   );
