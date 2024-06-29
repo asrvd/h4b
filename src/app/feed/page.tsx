@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import Feed from "@/components/feed";
 import { db } from "@/lib/db";
 
-export const dynamic = true;
+export const dynamic = "force-dynamic";
 
 async function getFeedContent() {
   const governmentReports = await db.governmentReport.findMany({
