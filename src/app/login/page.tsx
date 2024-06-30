@@ -17,7 +17,7 @@ export default async function Page() {
   return (
     <main className="p-4 w-full min-h-screen flex flex-col justify-center items-center gap-4">
       <div className="lg:w-[40%] w-full p-4">
-        <h2 className="text-3xl font-bold text-center text-foreground">
+        <h2 className="text-2xl font-bold text-center text-foreground">
           Sign in
         </h2>
         <LoginForm />

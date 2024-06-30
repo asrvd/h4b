@@ -142,16 +142,17 @@ export function CreateCivicReportForm({
               <FormItem>
                 <FormLabel>Tag</FormLabel>
                 <FormControl>
-                  <Select {...field}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <SelectTrigger>
-                      <SelectValue>
-                        {CivicReportTag[field.value as CivicReportTag]}
-                      </SelectValue>
+                      <SelectValue placeholder="Select a tag" />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.values(CivicReportTag).map((tag) => (
                         <SelectItem key={tag} value={tag}>
-                          {CivicReportTag[tag]}
+                          {tag}
                         </SelectItem>
                       ))}
                     </SelectContent>
