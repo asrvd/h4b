@@ -42,7 +42,7 @@ export default function Navbar({
         className="text-xl font-bold cursor-pointer text-foreground"
         href={user ? "/dashboard" : "/"}
       >
-        app name
+        Satya
       </Link>
       {/* <div className="flex items-center gap-4">
         {navbarLinks.map((link) => (
