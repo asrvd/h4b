@@ -6,6 +6,7 @@ import type { CivicReport } from "@prisma/client";
 import { Button } from "./ui/button";
 import { DeleteIcon } from "lucide-react";
 import { deleteReport } from "@/app/actions/main";
+import Tag from "./ui/tag";
 
 export default function DashboardFeed({
   governmentReports,
@@ -78,6 +79,10 @@ export default function DashboardFeed({
                       <DeleteIcon size={12} />
                     </Button>
                   </div>
+                  <div className="flex gap-2">
+                    <Tag text={report.tag} />
+                    <Tag text={report.status} />
+                  </div>
                 </div>
               ))
             : governmentReports.map((report) => (
@@ -109,6 +114,9 @@ export default function DashboardFeed({
                     >
                       <DeleteIcon size={12} />
                     </Button>
+                  </div>
+                  <div className="flex gap-2">
+                    <Tag text={report.status} />
                   </div>
                 </div>
               ))}

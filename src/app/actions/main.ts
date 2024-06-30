@@ -6,6 +6,7 @@ import type { CivicReport, GovernmentReportCategory } from "@prisma/client";
 import type { GovernmentReportFormValues } from "@/components/gov-report";
 import type { CivicReportFormValues } from "@/components/civic-report";
 import { revalidatePath } from "next/cache";
+import { ReportStatus } from "@prisma/client";
 
 export async function createCivicReport(
   values: CivicReportFormValues,
@@ -25,11 +26,58 @@ export async function createCivicReport(
         latitude: values.latitude,
         longitude: values.longitude,
         title: values.title,
+        tag: values.tag,
       },
     });
     revalidatePath("/feed");
     return report;
   } catch (error) {
+    return {
+      error: "An unknown error occurred",
+    };
+  }
+}
+
+export async function switchStatus(
+  reportId: string,
+  status: ReportStatus,
+  type: "civic" | "government"
+) {
+  if (!reportId) {
+    return {
+      error: "Invalid report ID",
+    };
+  }
+
+  try {
+    if (type === "civic") {
+      console.log("okay")
+      const report = await db.civicReport.update({
+        where: {
+          id: reportId,
+        },
+        data: {
+          status,
+        },
+      });
+
+      revalidatePath("/admin");
+      return report;
+    } else {
+      const report = await db.governmentReport.update({
+        where: {
+          id: reportId,
+        },
+        data: {
+          status,
+        },
+      });
+
+      revalidatePath("/admin");
+      return report;
+    }
+  } catch (error) {
+    console.log(error);
     return {
       error: "An unknown error occurred",
     };
@@ -162,7 +210,6 @@ export async function deleteReport(
       });
 
       return revalidatePath("/dashboard");
-      
     } else {
       const report = await db.governmentReport.delete({
         where: {

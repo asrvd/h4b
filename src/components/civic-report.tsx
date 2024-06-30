@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CivicReportTag } from "@prisma/client";
 import useGeoLocation from "@/hooks/useGeoLocation";
 import { toast } from "sonner";
 import { createCivicReport } from "@/app/actions/main";
@@ -41,6 +42,7 @@ const formSchema = z.object({
   spamCount: z.number().default(0),
   upvotes: z.number().default(0),
   downvotes: z.number().default(0),
+  tag: z.nativeEnum(CivicReportTag).default(CivicReportTag.OTHER),
 });
 
 export type CivicReportFormValues = z.infer<typeof formSchema>;
@@ -60,6 +62,7 @@ export function CreateCivicReportForm({
     defaultValues: {
       title: "",
       message: "",
+      tag: CivicReportTag.OTHER,
     },
   });
   const formRef = useRef<HTMLFormElement>(null);
@@ -126,6 +129,33 @@ export function CreateCivicReportForm({
                 <FormLabel>Content</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Your report content" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="tag"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tag</FormLabel>
+                <FormControl>
+                  <Select {...field}>
+                    <SelectTrigger>
+                      <SelectValue>
+                        {CivicReportTag[field.value as CivicReportTag]}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(CivicReportTag).map((tag) => (
+                        <SelectItem key={tag} value={tag}>
+                          {CivicReportTag[tag]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>

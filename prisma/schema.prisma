@@ -47,21 +47,39 @@ model Session {
   user User @relation(references: [id], fields: [userId], onDelete: Cascade)
 }
 
+enum CivicReportTag {
+  MUNICIPAL
+  ELECTRICITY
+  WATER
+  ROAD
+  TRAFFIC
+  OTHER
+  FIRE
+}
+
+enum ReportStatus {
+  PENDING
+  RESOLVED
+  REJECTED
+}
+
 model CivicReport {
-  id          String   @id @default(cuid())
+  id          String         @id @default(cuid())
   userId      String
   message     String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  user        User     @relation(fields: [userId], references: [id])
-  isSpam      Boolean  @default(false)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  user        User           @relation(fields: [userId], references: [id])
+  isSpam      Boolean        @default(false)
   title       String
   latitude    Float
   longitude   Float
-  upvotes     Int      @default(0)
-  downvotes   Int      @default(0)
-  upvotedBy   User[]   @relation("UpvotedCivicReports")
-  downvotedBy User[]   @relation("DownvotedCivicReports")
+  upvotes     Int            @default(0)
+  downvotes   Int            @default(0)
+  upvotedBy   User[]         @relation("UpvotedCivicReports")
+  downvotedBy User[]         @relation("DownvotedCivicReports")
+  tag         CivicReportTag @default(OTHER)
+  status      ReportStatus   @default(PENDING)
 }
 
 // to issues alerts/reports about governement officals or agencies
@@ -89,4 +107,5 @@ model GovernmentReport {
   user           User                     @relation(fields: [userId], references: [id])
   upvotes        Int                      @default(0)
   upvotedBy      User[]                   @relation("UpvotedGovernmentReports")
+  status         ReportStatus             @default(PENDING)
 }

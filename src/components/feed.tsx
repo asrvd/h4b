@@ -18,6 +18,7 @@ import { upVoteGovernmentReport } from "@/app/actions/main";
 import { voteCivicReport } from "@/app/actions/main";
 import { ArrowUpIcon, ArrowDownIcon, MoveDiagonalIcon } from "lucide-react";
 import ReportEnalrgedDialog from "./report-dialog";
+import Tag from "./ui/tag";
 
 export type GovernmentReportWithUser = Prisma.GovernmentReportGetPayload<{
   include: { user: true };
@@ -213,6 +214,10 @@ export default function Feed({
                         <MoveDiagonalIcon size={12} />
                       </Button>
                     </div>
+                    <div className="flex gap-2">
+                      <Tag text={report.tag} />
+                      <Tag text={report.status} />
+                    </div>
                     {/* <p className="text-gray-800">{report.message}</p> */}
                   </div>
                 ))
@@ -270,6 +275,10 @@ export default function Feed({
                         <MoveDiagonalIcon size={12} />
                       </Button>
                     </div>
+                    <div className="flex gap-2">
+                      <Tag text={report.tag} />
+                      <Tag text={report.status} />
+                    </div>
                     {/* <p className="text-gray-800">{report.message}</p> */}
                   </div>
                 ))}
@@ -323,6 +332,9 @@ export default function Feed({
                   >
                     <MoveDiagonalIcon size={12} />
                   </Button>
+                </div>
+                <div className="flex gap-2">
+                  <Tag text={report.status} />
                 </div>
               </div>
             ))}
